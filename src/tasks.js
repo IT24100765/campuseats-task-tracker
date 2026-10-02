@@ -13,11 +13,18 @@ function calculateTotal(price, quantity, customerType) {
     if (price < 0 || quantity < 0) {
         throw new Error("price and quantity must be >= 0");
     }
+
     const subtotal = price * quantity;
-    return customerType === "vip"
+    const normalizedType = String(customerType ?? "").toLowerCase();
+
+    return normalizedType === "vip"
         ? subtotal * (1 - VIP_DISCOUNT)
         : subtotal;
 }
+
+module.exports = {
+    calculateTotal,
+};
 
 // API key from environment variable — never hard-coded
 // const apiKey = process.env.API_KEY;
