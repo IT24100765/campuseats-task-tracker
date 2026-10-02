@@ -6,6 +6,6 @@
   "main": "src/tasks.js",
   "scripts": {
     "start": "node src/tasks.js",
-    "test": "node src/tasks.js"
+    "test": "node -e \"const assert = require('assert'); const { calculateTotal } = require('./src/tasks'); assert.strictEqual(calculateTotal(100, 2, 'vip'), 180); assert.strictEqual(calculateTotal(100, 2, 'standard'), 200); assert.throws(() => calculateTotal(-1, 1, 'vip'), /price and quantity must be >= 0/); console.log('All task tracker checks passed');\""
   }
 }
