@@ -12,28 +12,33 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.0
 
-      - name: List repository files
-        run: ls -la
-
-      - name: Basic project check
+      - name: Confirm project files exist
         run: |
-          echo "Running CI for CampusEats Task Tracker"
-          test -f README.md && echo "README found"
-          test -f src/tasks.js && echo "tasks.js found"
-          test -f .gitignore && echo ".gitignore found"
+          test -f README.md
+          test -f src/tasks.js
+          test -f .gitignore
+          echo "Project files verified."
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.2.0
         with:
-          node-version: '20'
+          node-version: '24'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --if-present
+        if: ${{ hashFiles('package.json') != '' }}
+        run: npm install
+
+      - name: Skip install when package.json is missing
+        if: ${{ hashFiles('package.json') == '' }}
+        run: echo "No package.json found; skipping npm install."
 
       - name: Run tests
+        if: ${{ hashFiles('package.json') != '' }}
         run: npm test --if-present
 
-      - name: Run security audit
+      - name: Security audit
+        if: ${{ hashFiles('package.json') != '' }}
         run: npm audit --audit-level=high || true
